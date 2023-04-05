@@ -54,6 +54,7 @@ for (i in unique(targets$isoform)) {
 }
 ```
 Extract sequences from GRCh38.primary_assembly.genome.fa. 
+
 ```{r}
 extractSeq <- function(x) {
   assign('chr',x['chr'])
