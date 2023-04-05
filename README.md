@@ -85,7 +85,7 @@ for (i in 1:nrow(targets)) {
 }
 ```
 
-#Prepare the exon fasta files for probe design
+# Prepare the exon fasta files for probe design
 Probes are **120bp** in length. 
 - For exon >= 120bp, use the original sequence
 - For exon < 120bp, concatenate the short exon to last exon and next exon. Then design probes to fully cover the short exon. 
