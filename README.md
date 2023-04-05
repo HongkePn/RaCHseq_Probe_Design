@@ -170,6 +170,12 @@ Here is the [link](https://sg.idtdna.com/pages/products/next-generation-sequenci
 Please follow the instruction there and submit your job. The unfiltered probe list will be sent to your email box soon. 
 
 # Select the probes
+
+<div align=center>
+<img src = "https://github.com/HongkePn/RaCHseq_Probe_Design/blob/main/probe_selection.png">
+</div>
+
+\
 Aims of this step: 
 - select 1 probe / per kb
 - for up-concatenations, select a probe from the right side.
