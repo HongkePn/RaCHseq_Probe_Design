@@ -17,7 +17,8 @@ All following steps can be done with **R**
 
 ## Extract sequences of target gene
 Read in **exon_all.tsv** and prepare the information data.frame
-```{R}
+
+```
 targets=read.table('exon_all.tsv',sep = '\t')
 colnames(targets)=c("chr","database","feature","start","end","score","strand","frame","isoform")
 targets=targets[targets$feature=="exon",]
