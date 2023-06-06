@@ -93,6 +93,7 @@ Probes are **120bp** in length.
 #code you need to modify =======================================
 origin_concatenation_pathway <- "pathway_to_where_you_want_to_save_original_exon_sequences"
 up_concatenation_pathway <- "pathway_to_where_you_want_to_save_up_concatenations"
+up_check_list_pathway <- "pathway_to_where_you_want_to_up_check_list" # up_concatenations that are < 120bp will be stored in the check list, you need to check if this exon was convered 
 down_concatenation_pathway <- "pathway_to_where_you_want_to_save_down_concatenations"
 
 #code you can copy straight forward ============================
@@ -110,9 +111,12 @@ for (i in unique(targets$isoform)) {
       
       if (length(seq.concatenation) < 120){ # if the up-concatenated exons is still < 120bp, 
         seq.concatenation <- c(seq.last02, seq.concatenation)
-        seq.write <- DNAStringSet(seq.concatenation)
-        names(seq.write) <- paste(y$isoform, "_exon_num", y$exon_num, "_POS", y$pos, "_L", y$length, "_PN", y$probe_num, "_up2", sep = "")
-        writeXStringSet(seq.write, up_concatenation_pathway, append = T)
+        # now, 3 exons are concatenated. write the concatenation in fasta file if it is >= 120bp
+        if (length(seq.concatenation) >= 120){
+          seq.write <- DNAStringSet(seq.concatenation)
+          names(seq.write) <- paste(y$isoform, "_exon_num", y$exon_num, "_POS", y$pos, "_L", y$length, "_PN", y$probe_num, "_up2", sep = "")
+          writeXStringSet(seq.write, up_concatenation_pathway, append = T)
+        } 
       } else {
         seq.write <- DNAStringSet(seq.concatenation)
         names(seq.write) <- paste(y$isoform, "_exon_num", y$exon_num, "_POS", y$pos, "_L", y$length, "_PN", y$probe_num, "_up1", sep = "")
@@ -129,6 +133,7 @@ for (i in unique(targets$isoform)) {
       seq.last01 <- seq.o
     }
   }
+  write.csv()
 }
 
 #make down-concatenations (short exon concatenated to next exon)
@@ -144,9 +149,11 @@ for (i in unique(targets$isoform)) {
       seq.concatenation <- c(seq.current,seq.last01)
       if(length(seq.concatenation) < 120){ # if the down-concatenated exons is still < 120bp,
         seq.concatenation <- c(seq.concatenation,seq.last02)
-        seq.write <- DNAStringSet(seq.concatenation)
-        names(seq.write) <- paste(y$isoform, "_exon_num", y$exon_num, "_POS", y$pos, "_L", y$length, "_PN", y$probe_num, "_down2", sep = "")
-        writeXStringSet(seq.write, down_concatenation_pathway, append = T)
+        if(length(seq.concatenation) >= 120){
+          seq.write <- DNAStringSet(seq.concatenation)
+          names(seq.write) <- paste(y$isoform, "_exon_num", y$exon_num, "_POS", y$pos, "_L", y$length, "_PN", y$probe_num, "_down2", sep = "")
+          writeXStringSet(seq.write, down_concatenation_pathway, append = T)
+        } 
       } else {
         seq.write <- DNAStringSet(seq.concatenation)
         names(seq.write) <- paste(y$isoform, "_exon_num", y$exon_num, "_POS", y$pos, "_L", y$length, "_PN", y$probe_num, "_down1", sep = "")
@@ -169,7 +176,7 @@ Here is the [link](https://sg.idtdna.com/pages/products/next-generation-sequenci
 
 Please follow the instruction there and submit your job. The unfiltered probe list will be sent to your email box soon. 
 
-# Select the probes
+# select the probes
 
 <div align=center>
 <img src = "https://github.com/HongkePn/RaCHseq_Probe_Design/blob/main/probe_selection.png">
@@ -181,6 +188,8 @@ Aims of this step:
 - for up-concatenations, select a probe from the right side.
 - for down-concatenations, select a probe from the left side.
 - select probes with similar GC%
+
+##Check if all exons are covered by probes
 
 ```
 #code you need to modify =======================================
@@ -209,7 +218,18 @@ probe.seq$length <- gsub("^.*_L","",probe.seq$Chromosome)
 probe.seq$length <- gsub("_PN.*$","",probe.seq$length)
 probe.seq$length <- as.numeric(probe.seq$length)
 
-#probe selection
+targets$exon_name <- paste(targets$isoform, "_exon_num", targets$exon_num)
+if(sum(unique(targets$exon_name) %in% unique(probe.seq$exon_name))/length(unique(targets$exon_name)) == 1){
+  print("all exons are covered")
+} else {
+  print("following are exons not covered:")
+  check_list <- unique(targets$exon_name)[!(unique(targets$exon_name) %in% unique(probe.seq$exon_name)]
+  print(check_list)
+}
+```
+
+
+```
 probe.select <- data.frame()
 probe.up <- dplyr::filter(probe.seq, concatenation == "up")
 for (i in unique(probe.up$exon_name)) {
