@@ -1,4 +1,8 @@
 # RaCHseq Probe Design
+
+Hi this script has just been updated (2023-06-06). I might need to test if it works smoothly. 
+Send emails if you have any questions:D
+
 ## Files required for probe design
 - A list of target genes
 - gencode.v40.primary_assembly.annotation.gtf (Download from Gencode)
@@ -228,6 +232,9 @@ if(sum(unique(targets$exon_name) %in% unique(probe.seq$exon_name))/length(unique
 }
 ```
 
+Normally, all exons should be covered by at least one probe. 
+However, there are some uncovered exons, it means this exon as well as the exons around it are too short to make a concatenation > 120bp. 
+If it is prossible, you can continue adding more upstream/downstream exons to the up and down concatenation manually. (I only add 2 exons at max)
 
 ```
 probe.select <- data.frame()
