@@ -41,6 +41,7 @@ targets$exon_num <- as.numeric(targets$exon_num)
 targets$chr <- gsub("chr","",targets$chr)
 targets$chr[targets$chr=="X"]="23"
 targets$chr[targets$chr=="Y"]="24"
+targets$chr[targets$chr=="M"]="25"
 targets$chr=as.numeric(targets$chr)
 
 #take 1 probe / per kb, calculate how many probes we need to cover each exon
@@ -97,7 +98,6 @@ Probes are **120bp** in length.
 #code you need to modify =======================================
 origin_concatenation_pathway <- "pathway_to_where_you_want_to_save_original_exon_sequences"
 up_concatenation_pathway <- "pathway_to_where_you_want_to_save_up_concatenations"
-up_check_list_pathway <- "pathway_to_where_you_want_to_up_check_list" # up_concatenations that are < 120bp will be stored in the check list, you need to check if this exon was convered 
 down_concatenation_pathway <- "pathway_to_where_you_want_to_save_down_concatenations"
 
 #code you can copy straight forward ============================
@@ -137,7 +137,6 @@ for (i in unique(targets$isoform)) {
       seq.last01 <- seq.o
     }
   }
-  write.csv()
 }
 
 #make down-concatenations (short exon concatenated to next exon)
