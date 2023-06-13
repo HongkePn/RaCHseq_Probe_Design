@@ -177,7 +177,13 @@ for (i in unique(targets$isoform)) {
 We can use IDT *Custom Hybridization Capture Panels* to make probes against our fasta files. 
 Here is the [link](https://sg.idtdna.com/pages/products/next-generation-sequencing/workflow/xgen-ngs-hybridization-capture/custom-hyb-panels) to the web tool. 
 
-Please follow the instruction there and submit your job. The unfiltered probe list will be sent to your email box soon. 
+Please follow the instruction there and submit your job. The unfiltered probe list will be sent to your email box soon. (if the excel file is not attached, please log in your account on IDT webpage and check the notifications there.)
+
+**NOTE**: When you upload the fasta files to IDT and try to design probes, sometimes error message could pop up, such as 
+
+* (1) some exons are still < 120bp even though we concatenated it with another 1 or 2 exons. **my solution**: continue adding more upstream/downstream exons to the up and down concatenation manually (all exon sequences are stored in the fasta generated in step 2:  Extract sequences of target gene).
+
+* (2) there are unexpected letters (other than A, T, C and G) in your fasta file. For example, when I try to design probes for Mito genes, there is an unexpected "N" in MT-RNR2. **my solution**: remove the N and the following sequence if it is possible
 
 # select the probes
 
@@ -231,9 +237,7 @@ if(sum(unique(targets$exon_name) %in% unique(probe.seq$exon_name))/length(unique
 }
 ```
 
-Normally, all exons should be covered by at least one probe. 
-However, there are some uncovered exons, it means this exon as well as the exons around it are too short to make a concatenation > 120bp. 
-If it is prossible, you can continue adding more upstream/downstream exons to the up and down concatenation manually. (I only add 2 exons at max)
+
 
 ```
 probe.select <- data.frame()
