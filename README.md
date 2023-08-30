@@ -227,7 +227,7 @@ probe.seq$length <- gsub("^.*_L","",probe.seq$Chromosome)
 probe.seq$length <- gsub("_PN.*$","",probe.seq$length)
 probe.seq$length <- as.numeric(probe.seq$length)
 
-targets$exon_name <- paste(targets$isoform, "_exon_num", targets$exon_num)
+targets$exon_name <- paste(targets$isoform, "_exon_num", targets$exon_num, sep = "")
 if(sum(unique(targets$exon_name) %in% unique(probe.seq$exon_name))/length(unique(targets$exon_name)) == 1){
   print("all exons are covered")
 } else {
